@@ -58,6 +58,43 @@ and deployed under servlet containers like Apache Tomcat or Jetty.
 
 
 ------------------------------------------------------------
+ Jakarta EE Migration (guacamole-common)
+------------------------------------------------------------
+
+The guacamole-common module has been migrated from the legacy javax.* namespace
+to the Jakarta EE namespace (jakarta.*), making it compatible with:
+
+  - Jakarta EE 10+
+  - Apache Tomcat 10.1+
+  - Spring Boot 3.x+
+
+Minimum required Java version: 17 (enforced via maven-compiler-plugin override
+in guacamole-common/pom.xml).
+
+Changed dependencies in guacamole-common/pom.xml:
+
+  javax.servlet:servlet-api:2.5
+    -> jakarta.servlet:jakarta.servlet-api:6.0.0
+
+  javax.websocket:javax.websocket-api:1.0
+    -> jakarta.websocket:jakarta.websocket-client-api:2.1.0 (common API)
+       jakarta.websocket:jakarta.websocket-api:2.1.0        (server-only API)
+
+Note: In Jakarta WebSocket 2.1 the common API (Endpoint, Session, CloseReason,
+MessageHandler, RemoteEndpoint, etc.) was split into a separate artifact called
+jakarta.websocket-client-api. Both artifacts must be declared.
+
+Changed source files:
+
+  guacamole-common/src/main/java/org/apache/guacamole/servlet/
+    GuacamoleHTTPTunnelServlet.java
+      javax.servlet.* -> jakarta.servlet.*
+
+  guacamole-common/src/main/java/org/apache/guacamole/websocket/
+    GuacamoleWebSocketTunnelEndpoint.java
+      javax.websocket.* -> jakarta.websocket.*
+
+------------------------------------------------------------
  Reporting problems
 ------------------------------------------------------------
 
